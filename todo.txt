@@ -1,0 +1,6 @@
+- create the routes + modules
+- implement mongoose
+- implement graphql
+- create heroku environments
+- create dockerfiles
+- create docker-compose for this setup
