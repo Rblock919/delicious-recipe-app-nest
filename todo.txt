@@ -1,4 +1,5 @@
-- create the routes + modules
+- create current feature modules
+- create routes for each feature module
 - implement mongoose
 - implement graphql
 - create heroku environments

@@ -1,7 +1,7 @@
 {
   "name": "recipe-app-nest",
   "version": "0.0.1",
-  "description": "NestJS Server with GQL integration for my recipe application",
+  "description": "NestJS Server with GQL & mongoose integration for my recipe application",
   "author": "Ryan Block",
   "license": "ISC",
   "scripts": {
@@ -13,7 +13,7 @@
     "start:prod": "node dist/main",
     "format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
     "lint": "eslint --fix 'src/**/*.ts'",
-    "lint.probe": "eslint --fix-dry-run 'src/**/*.ts'",
+    "lint:probe": "eslint --fix-dry-run 'src/**/*.ts'",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -49,7 +49,7 @@
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
-    "eslint": "^6.7.2",
+    "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-import": "^2.20.1",

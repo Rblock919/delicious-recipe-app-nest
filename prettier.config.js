@@ -7,8 +7,8 @@ module.exports = {
     {
       files: 'package*.json',
       options: {
-        printWidth: 1000
-      }
-    }
-  ]
+        printWidth: 1000,
+      },
+    },
+  ],
 };
