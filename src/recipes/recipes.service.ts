@@ -1,12 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
+import { Recipe } from './interfaces/recipe.interface';
 
 @Injectable()
 export class RecipesService {
-  getRecipes(): string {
-    return 'Hello Recipes!';
+  constructor(
+    @InjectModel('Recipe') private recipeModel: Model<Recipe>,
+    @InjectModel('NewRecipe') private newRecipeModel: Model<Recipe>
+  ) {}
+
+  async getRecipes(): Promise<Recipe[]> {
+    return this.recipeModel.find().exec();
   }
 
-  getRecipe(id: string): string {
-    return `Hello Recipe #${id}`;
+  async getRecipe(id: string): Promise<Recipe> {
+    return this.recipeModel.findById(id).exec();
+  }
+
+  async getApprovalList(): Promise<Recipe[]> {
+    return this.newRecipeModel.find().exec();
+  }
+
+  async getApprovalById(id: string): Promise<Recipe> {
+    return this.newRecipeModel.findById(id).exec();
   }
 }

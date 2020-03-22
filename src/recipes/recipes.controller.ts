@@ -1,17 +1,32 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { RecipesService } from './recipes.service';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 
+import { RecipesService } from './recipes.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Recipe } from './interfaces/recipe.interface';
+// import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
+
+@UseGuards(JwtAuthGuard)
 @Controller('recipes')
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Get()
-  getRecipes(): string {
+  async getRecipes(): Promise<Recipe[]> {
     return this.recipesService.getRecipes();
   }
 
+  @Get('approval')
+  async getApprovalList(): Promise<Recipe[]> {
+    return this.recipesService.getApprovalList();
+  }
+
   @Get(':id')
-  getRecipe(@Param('id') id: string): string {
+  async getRecipe(@Param('id') id: string): Promise<Recipe> {
     return this.recipesService.getRecipe(id);
+  }
+
+  @Get('approval/:id')
+  async getApprovalById(@Param('id') id: string): Promise<Recipe> {
+    return this.recipesService.getApprovalById(id);
   }
 }
