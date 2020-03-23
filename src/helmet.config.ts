@@ -1,6 +1,6 @@
 import * as helmet from 'helmet';
 
-export function AppHeaderSecurity(app) {
+export const AppHeaderSecurity = app => {
   console.log('in header security');
   const remote = process.env.REMOTE || false;
   if (remote) {
@@ -38,10 +38,10 @@ export function AppHeaderSecurity(app) {
           // TODO: update these now that it will only be this server and the client
           "'self'",
           'https://delicious-recipe-app.herokuapp.com/api/',
-          'http://localhost:4000/',
+          'http://localhost:3000/',
         ],
         // reportUri: '/cspviolation'
       },
     })
   );
-}
+};

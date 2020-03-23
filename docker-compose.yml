@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  nest:
+    container_name: recipe-app-nest
+    build:
+      context: .
+      dockerfile: nest.Dockerfile
+    networks:
+      - recipe-app-nest-network
+    volumes:
+      - ".:/app"
+      - "/app/node_modules"
+      - "/app/dist"
+    ports:
+      - "3000:3000"
+
+  # ng:
+  #   container_name: recipe-app-ng
+  #   build:
+  #     context: ../recipe-app-ng/
+  #     dockerfile: ng.Dockerfile
+  #   ports:
+  #     - "4200:4200"
+  #   networks:
+  #     - recipe-app-network
+  #   volumes:
+  #     - "/app/node_modules"
+  #     - "../recipe-app-ng/:/app"
+
+  mongo:
+    container_name: mongodb
+    image: mongo
+    networks:
+      - recipe-app-nest-network
+    # Below is for testing from host machine and not just node container
+#    ports:
+#      - "27017:27017"
+
+networks:
+  recipe-app-nest-network:
+    driver: bridge
