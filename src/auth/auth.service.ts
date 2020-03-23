@@ -13,6 +13,7 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
+  // TODO implement typed returns for these methods and the possibly strategies too
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.userModel.findOne({ username }, '-__v').exec();
     if (user && (await user.passwordIsValid(password))) {

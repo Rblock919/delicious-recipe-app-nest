@@ -1,9 +1,9 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 
-import { RecipesService } from './recipes.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { Recipe } from './interfaces/recipe.interface';
 import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
+import { RecipesService } from './recipes.service';
+import { Recipe } from './interfaces/recipe.interface';
 
 @UseGuards(JwtAuthGuard)
 @Controller('recipes')

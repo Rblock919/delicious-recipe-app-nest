@@ -13,10 +13,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  getSecret(): string {
-    return this.configService.get<string>('TOKEN_SECRET');
-  }
-
   // TODO create types for payload responses
   // eslint-disable-next-line class-methods-use-this
   async validate(payload: any) {
