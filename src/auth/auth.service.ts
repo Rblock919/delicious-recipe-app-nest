@@ -30,6 +30,26 @@ export class AuthService {
     };
   }
 
+  async getUserdata(user: User): Promise<User> {
+    console.log('in get user data');
+    const foundUser = await this.userModel.findById(user._id, '-password -__v');
+    if (!foundUser) {
+      return null;
+    }
+    return foundUser;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async logout(req: any): Promise<any> {
+    req.session.destroy(err => {
+      if (err) {
+        // TODO throw proper exception?
+        return null;
+      }
+      return { message: 'Successfully Logged Out!' };
+    });
+  }
+
   async validateAdmin(id: string): Promise<any> {
     const user = await this.userModel.findById(id).exec();
     if (user && user.isAdmin) {
