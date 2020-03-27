@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Body } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
@@ -30,5 +30,10 @@ export class RecipesController {
   @Get('approval/:id')
   async getApprovalById(@Param('id') id: string): Promise<Recipe> {
     return this.recipesService.getApprovalById(id);
+  }
+
+  @Post('submit')
+  async submitForApproval(@Body('recipe') recipe: any): Promise<any> {
+    return this.recipesService.submitForApproval(recipe);
   }
 }

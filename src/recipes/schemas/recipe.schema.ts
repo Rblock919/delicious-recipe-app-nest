@@ -54,9 +54,13 @@ export const RecipeSchema = new mongoose.Schema({
   imgDir: {
     type: String,
   },
-  favoriters: [String],
+  favoriters: {
+    type: [String],
+    default: [],
+  },
   raters: {
     type: Map,
     of: Number,
+    default: {},
   },
 });

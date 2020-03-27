@@ -26,4 +26,14 @@ export class RecipesService {
   async getApprovalById(id: string): Promise<Recipe> {
     return this.newRecipeModel.findById(id).exec();
   }
+
+  async submitForApproval(recipe: any): Promise<any> {
+    // eslint-disable-next-line new-cap
+    const newRecipe = new this.newRecipeModel(recipe);
+    const returnRecipe = await newRecipe.save();
+    if (!returnRecipe) {
+      return null;
+    }
+    return returnRecipe;
+  }
 }
