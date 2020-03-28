@@ -1,6 +1,8 @@
 import { NutritionValuesDto } from './create-nutrition-values.dto';
 
 export class RecipeDto {
+  _id?: string;
+
   title: string;
 
   producer: string;

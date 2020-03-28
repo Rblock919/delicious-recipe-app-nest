@@ -1,5 +1,6 @@
-- create current feature modules
-- create routes for each feature module
-- implement mongoose
 - implement graphql
 - create heroku environments
+- create validaiton & sanitation via pipes
+- look into middleware & interceptors & exception filters
+- look into pagination (or could front-end library like material handle this)
+- create return types for all routes

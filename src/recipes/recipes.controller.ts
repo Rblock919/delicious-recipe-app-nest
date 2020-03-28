@@ -6,6 +6,7 @@ import {
   Post,
   Body,
   Delete,
+  Patch,
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -41,6 +42,22 @@ export class RecipesController {
     return this.recipesService.getApprovalById(id);
   }
 
+  @UseGuards(AdminAuthGuard)
+  @Post('add')
+  async addRecipe(
+    @Body('approvalId') id: string,
+    @Body('recipe') recipe: RecipeDto
+  ): Promise<any> {
+    return this.recipesService.addRecipe(id, recipe);
+  }
+
+  // TODO: test below route
+  @UseGuards(AdminAuthGuard)
+  @Patch('update')
+  async updateRecipe(@Body('recipe') recipe: RecipeDto): Promise<Recipe> {
+    return this.recipesService.updateRecipe(recipe);
+  }
+
   @Post('submit')
   async submitForApproval(@Body('recipe') recipe: RecipeDto): Promise<Recipe> {
     return this.recipesService.submitForApproval(recipe);
@@ -58,7 +75,6 @@ export class RecipesController {
     return this.recipesService.rejectRecipe(id);
   }
 
-  // TODO: test both below routes
   /* TODO: eventually refactor favorite and rate calls to not just use the body param and
   intelligently add/remove the requesting users value */
   @Post('favorite')
@@ -69,6 +85,7 @@ export class RecipesController {
     return this.recipesService.favoriteRecipe(id, favoriters);
   }
 
+  // TODO: test below route
   @Post('rate')
   async rateRecipe(
     @Body('_id') id: string,

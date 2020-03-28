@@ -22,13 +22,15 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('signOut')
   async signOut(@Request() req): Promise<any> {
     return this.authService.logout(req);
   }
 
+  // TODO: update route name here & in front-end
   @UseGuards(JwtAuthGuard)
-  @Get('userData')
+  @Get('getUserData')
   async getUserdata(@Request() req): Promise<User> {
     return this.authService.getUserdata(req.user);
   }

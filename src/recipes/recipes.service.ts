@@ -44,6 +44,32 @@ export class RecipesService {
     return null;
   }
 
+  // TODO: test below method
+  async updateRecipe(recipe: RecipeDto): Promise<Recipe> {
+    const id = recipe._id;
+    const updatedRecipe = await this.recipeModel
+      .findByIdAndUpdate(id, recipe)
+      .exec();
+    if (updatedRecipe) {
+      return updatedRecipe;
+    }
+    return null;
+  }
+
+  // TODO: test below method
+  async addRecipe(id: string, recipe: RecipeDto): Promise<any> {
+    const deleteResult = await this.newRecipeModel.findByIdAndDelete(id);
+    if (!deleteResult) {
+      return null;
+    }
+    // eslint-disable-next-line new-cap
+    const newRecipe = await new this.recipeModel(recipe).save();
+    if (!newRecipe) {
+      return null;
+    }
+    return { id: newRecipe._id };
+  }
+
   async submitForApproval(recipe: RecipeDto): Promise<Recipe> {
     // eslint-disable-next-line new-cap
     const newRecipe = new this.newRecipeModel(recipe);
