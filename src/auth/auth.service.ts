@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 
+import { LoginModel } from './interfaces/login.model.interface';
 import { User } from '../user/interface/user.interface';
 import { UserDto } from '../user/dto/user.dto';
 
@@ -10,6 +11,7 @@ import { UserDto } from '../user/dto/user.dto';
 export class AuthService {
   constructor(
     @InjectModel('User') private userModel: Model<User>,
+    @InjectModel('Login') private loginModel: LoginModel,
     private jwtService: JwtService
   ) {}
 
@@ -22,7 +24,32 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User): Promise<any> {
+  async login(user: User, remoteAddress: string): Promise<any> {
+    const identityKey = `${user.username}-${remoteAddress}`;
+
+    // eslint-disable-next-line new-cap
+    if (await this.loginModel.loginInProgress(identityKey)) {
+      // TODO: tell client login already is in progress
+      console.log('login already in progress');
+      return null;
+    }
+
+    if (!(await this.loginModel.canAuthenticate(identityKey))) {
+      await this.loginModel.endProgress(identityKey);
+      // TODO: tell client account is temp locked out due to high # of attempts
+      console.log('too many attempts');
+      return null;
+    }
+
+    const successResult = await this.loginModel.successfulLoginAttempt(
+      identityKey
+    );
+
+    if (!successResult) {
+      console.log('unsuccessful successfulLoginAttempt mongoose call');
+      return null;
+    }
+
     const payload = { username: user.username, sub: user._id };
     return {
       user,
@@ -31,7 +58,6 @@ export class AuthService {
   }
 
   async getUserdata(user: User): Promise<User> {
-    console.log('in get user data');
     const foundUser = await this.userModel.findById(user._id, '-password -__v');
     if (!foundUser) {
       return null;
@@ -79,4 +105,10 @@ export class AuthService {
     }
     return null;
   }
+
+  private delayResponse = response => {
+    setTimeout(() => {
+      response();
+    }, 600);
+  };
 }

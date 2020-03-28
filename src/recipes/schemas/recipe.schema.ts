@@ -60,7 +60,7 @@ export const RecipeSchema = new mongoose.Schema({
   },
   raters: {
     type: Map,
-    of: Number,
+    of: String,
     default: {},
   },
 });

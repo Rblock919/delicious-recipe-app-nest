@@ -24,8 +24,10 @@ export const LoginSchema = new mongoose.Schema({
 });
 
 // eslint-disable-next-line func-names
-LoginSchema.static('canAuthenticate', async function(key) {
-  const login = await this.findOne({ identityKey: key });
+LoginSchema.static('canAuthenticate', async function(
+  key: string
+): Promise<boolean> {
+  const login = await this.findOne({ identityKey: key }).exec();
 
   if (!login || login.failedAttempts < 4) {
     return true;
@@ -74,7 +76,9 @@ LoginSchema.static('canAuthenticate', async function(key) {
 });
 
 // eslint-disable-next-line func-names
-LoginSchema.static('failedLoginAttempt', async function(key) {
+LoginSchema.static('failedLoginAttempt', async function(
+  key: string
+): Promise<any> {
   const query = { identityKey: key };
   const now = new Date();
   const update = {
@@ -87,8 +91,10 @@ LoginSchema.static('failedLoginAttempt', async function(key) {
 });
 
 // eslint-disable-next-line func-names
-LoginSchema.static('successfulLoginAttempt', async function(key) {
-  const login = await this.findOne({ identityKey: key });
+LoginSchema.static('successfulLoginAttempt', async function(
+  key: string
+): Promise<any> {
+  const login = await this.findOne({ identityKey: key }).exec();
   if (login) {
     return login.remove();
   }
@@ -96,7 +102,9 @@ LoginSchema.static('successfulLoginAttempt', async function(key) {
 });
 
 // eslint-disable-next-line func-names
-LoginSchema.static('inProgress', async function(key: string) {
+LoginSchema.static('loginInProgress', async function(
+  key: string
+): Promise<any> {
   const login = await this.findOne({ identityKey: key });
   const query = { identityKey: key };
   const update = { inProgress: true };
@@ -106,7 +114,9 @@ LoginSchema.static('inProgress', async function(key: string) {
 });
 
 // eslint-disable-next-line func-names
-LoginSchema.static('endProgress', async function(key: string) {
+LoginSchema.static('endProgress', async function(
+  key: string
+): Promise<boolean> {
   const query = { identityKey: key };
   const update = { inProgress: false };
   const updatedLogin = await this.findOneAndUpdate(query, update).exec();

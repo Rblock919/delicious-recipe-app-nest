@@ -22,7 +22,6 @@ export const UserSchema = new mongoose.Schema({
 
 /* Can't use arrow functions below due to the usage of the 'this' keyword */
 
-// TODO: convert this into a nestjs mongoose specific hook
 // eslint-disable-next-line func-names
 UserSchema.pre<User>('save', async function(next) {
   if (!this.isModified('password')) {
@@ -48,17 +47,3 @@ UserSchema.methods.passwordIsValid = async function(password) {
     return false;
   }
 };
-
-// export async function preSaveHook(next: Function) {
-//   if (!this.isModified('password')) {
-//     return next();
-//   }
-
-//   try {
-//     this.password = await bcrypt.hash(this.password, 12);
-//     return next();
-//   } catch (err) {
-//     console.log(`err ${err}`);
-//     return next(err);
-//   }
-// }

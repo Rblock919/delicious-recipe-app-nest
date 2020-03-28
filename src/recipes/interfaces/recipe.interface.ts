@@ -10,5 +10,5 @@ export interface Recipe extends Document {
   readonly nutritionValues: NutritionValues;
   readonly imgDir: string;
   readonly favoriters: string[];
-  readonly raters: Map<number, number>;
+  readonly raters: Map<string, number>;
 }

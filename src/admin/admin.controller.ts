@@ -15,6 +15,7 @@ export class AdminController {
     return this.adminService.getUsers();
   }
 
+  // TODO: add array validation pipe
   @Post('updateUsers')
   async updateUsers(@Body() editedUsers: EditUserDto[]): Promise<any> {
     return this.adminService.updateUsers(editedUsers);

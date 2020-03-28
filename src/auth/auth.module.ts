@@ -1,4 +1,5 @@
 import { Module, DynamicModule } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -9,6 +10,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { RegisterStrategy } from './strategies/register.strategy';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
+import { LoginSchema } from './schemas/login.schema';
 
 @Module({})
 export class AuthModule {
@@ -18,6 +20,9 @@ export class AuthModule {
       imports: [
         UserModule,
         PassportModule,
+        MongooseModule.forFeature([
+          { name: 'Login', schema: LoginSchema, collection: 'logins' },
+        ]),
         JwtModule.register({
           secret,
           signOptions: { expiresIn: '7200s' },

@@ -7,8 +7,10 @@ import {
   Body,
   Delete,
   Patch,
+  UsePipes,
 } from '@nestjs/common';
 
+import { RecipeValidationPipe } from './pipes/recipe-validation.pipe';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
 import { RecipesService } from './recipes.service';
@@ -42,6 +44,7 @@ export class RecipesController {
     return this.recipesService.getApprovalById(id);
   }
 
+  // TODO: possibly implement recipe validation pipe here
   @UseGuards(AdminAuthGuard)
   @Post('add')
   async addRecipe(
@@ -52,12 +55,14 @@ export class RecipesController {
   }
 
   // TODO: test below route
+  // TODO: implement recipe validation pipe here
   @UseGuards(AdminAuthGuard)
   @Patch('update')
   async updateRecipe(@Body('recipe') recipe: RecipeDto): Promise<Recipe> {
     return this.recipesService.updateRecipe(recipe);
   }
 
+  @UsePipes(RecipeValidationPipe)
   @Post('submit')
   async submitForApproval(@Body('recipe') recipe: RecipeDto): Promise<Recipe> {
     return this.recipesService.submitForApproval(recipe);
@@ -75,6 +80,7 @@ export class RecipesController {
     return this.recipesService.rejectRecipe(id);
   }
 
+  // TODO: add validation pipes to body params
   /* TODO: eventually refactor favorite and rate calls to not just use the body param and
   intelligently add/remove the requesting users value */
   @Post('favorite')
@@ -85,6 +91,7 @@ export class RecipesController {
     return this.recipesService.favoriteRecipe(id, favoriters);
   }
 
+  // TODO: add validation pipes to body params
   // TODO: test below route
   @Post('rate')
   async rateRecipe(
