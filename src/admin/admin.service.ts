@@ -13,8 +13,7 @@ export class AdminService {
     return this.userModel.find({}, '-__v -password').exec();
   }
 
-  async updateUsers(editedUsers: EditUserDto[]): Promise<any> {
-    console.log({ editedUsers });
+  async updateUsers(editedUsers: EditUserDto[]): Promise<{ message: string }> {
     const setToFalseIds = [];
     const setToTrueIds = [];
 
@@ -46,7 +45,7 @@ export class AdminService {
     if (updateTrueResult || updateFalseResult) {
       return { message: 'Success' };
     }
-    // TODO: throw an error here?
+    // TODO: throw a specific error here
     return null;
   }
 }

@@ -8,8 +8,10 @@ import {
   Delete,
   Patch,
   UsePipes,
+  ParseArrayPipe,
 } from '@nestjs/common';
 
+import { ObjectIdValidationPipe } from './pipes/object-id-validation.pipe';
 import { RecipeValidationPipe } from './pipes/recipe-validation.pipe';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
@@ -34,28 +36,32 @@ export class RecipesController {
   }
 
   @Get(':id')
-  async getRecipe(@Param('id') id: string): Promise<Recipe> {
+  async getRecipe(
+    @Param('id', ObjectIdValidationPipe) id: string
+  ): Promise<Recipe> {
     return this.recipesService.getRecipe(id);
   }
 
   @UseGuards(AdminAuthGuard)
   @Get('approval/:id')
-  async getApprovalById(@Param('id') id: string): Promise<Recipe> {
+  async getApprovalById(
+    @Param('id', ObjectIdValidationPipe) id: string
+  ): Promise<Recipe> {
     return this.recipesService.getApprovalById(id);
   }
 
-  // TODO: possibly implement recipe validation pipe here
+  // TODO: test below route
   @UseGuards(AdminAuthGuard)
   @Post('add')
   async addRecipe(
-    @Body('approvalId') id: string,
-    @Body('recipe') recipe: RecipeDto
-  ): Promise<any> {
+    @Body('approvalId', ObjectIdValidationPipe) id: string,
+    // TODO: test that using this pipe here works
+    @Body('recipe', RecipeValidationPipe) recipe: RecipeDto
+  ): Promise<{ id: string }> {
     return this.recipesService.addRecipe(id, recipe);
   }
 
-  // TODO: test below route
-  // TODO: implement recipe validation pipe here
+  @UsePipes(RecipeValidationPipe)
   @UseGuards(AdminAuthGuard)
   @Patch('update')
   async updateRecipe(@Body('recipe') recipe: RecipeDto): Promise<Recipe> {
@@ -70,34 +76,38 @@ export class RecipesController {
 
   @UseGuards(AdminAuthGuard)
   @Delete('delete/:id')
-  async deleteRecipe(@Param('id') id: string): Promise<any> {
+  async deleteRecipe(
+    @Param('id', ObjectIdValidationPipe) id: string
+  ): Promise<{ message: string }> {
     return this.recipesService.deleteRecipe(id);
   }
 
   @UseGuards(AdminAuthGuard)
   @Delete('reject/:id')
-  async rejectRecipe(@Param('id') id: string): Promise<any> {
+  async rejectRecipe(
+    @Param('id', ObjectIdValidationPipe) id: string
+  ): Promise<{ message: string }> {
     return this.recipesService.rejectRecipe(id);
   }
 
-  // TODO: add validation pipes to body params
   /* TODO: eventually refactor favorite and rate calls to not just use the body param and
   intelligently add/remove the requesting users value */
   @Post('favorite')
   async favoriteRecipe(
-    @Body('_id') id: string,
-    @Body('favoriters') favoriters: string[]
-  ): Promise<any> {
+    @Body('_id', ObjectIdValidationPipe) id: string,
+    @Body('favoriters', new ParseArrayPipe({ items: String }))
+    favoriters: string[]
+  ): Promise<Recipe> {
+    console.log('made it to controller method');
     return this.recipesService.favoriteRecipe(id, favoriters);
   }
 
-  // TODO: add validation pipes to body params
   // TODO: test below route
   @Post('rate')
   async rateRecipe(
-    @Body('_id') id: string,
+    @Body('_id', ObjectIdValidationPipe) id: string,
     @Body('raters') raters: Map<string, number>
-  ): Promise<any> {
+  ): Promise<Recipe> {
     return this.recipesService.rateRecipe(id, raters);
   }
 }

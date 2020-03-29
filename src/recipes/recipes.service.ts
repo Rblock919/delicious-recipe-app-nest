@@ -44,11 +44,10 @@ export class RecipesService {
     return null;
   }
 
-  // TODO: test below method
   async updateRecipe(recipe: RecipeDto): Promise<Recipe> {
     const id = recipe._id;
     const updatedRecipe = await this.recipeModel
-      .findByIdAndUpdate(id, recipe)
+      .findByIdAndUpdate(id, recipe, { new: true })
       .exec();
     if (updatedRecipe) {
       return updatedRecipe;
@@ -56,8 +55,7 @@ export class RecipesService {
     return null;
   }
 
-  // TODO: test below method
-  async addRecipe(id: string, recipe: RecipeDto): Promise<any> {
+  async addRecipe(id: string, recipe: RecipeDto): Promise<{ id: string }> {
     const deleteResult = await this.newRecipeModel.findByIdAndDelete(id);
     if (!deleteResult) {
       return null;
@@ -80,7 +78,7 @@ export class RecipesService {
     return null;
   }
 
-  async deleteRecipe(id: string): Promise<any> {
+  async deleteRecipe(id: string): Promise<{ message: string }> {
     const returnResult = await this.recipeModel.findByIdAndDelete(id).exec();
     if (returnResult) {
       return { message: 'Success' };
@@ -88,7 +86,7 @@ export class RecipesService {
     return null;
   }
 
-  async rejectRecipe(id: string): Promise<any> {
+  async rejectRecipe(id: string): Promise<{ message: string }> {
     const returnResult = await this.newRecipeModel.findByIdAndDelete(id).exec();
     if (returnResult) {
       return { message: 'Success' };
@@ -96,10 +94,10 @@ export class RecipesService {
     return null;
   }
 
-  async favoriteRecipe(id: string, favoriters: string[]): Promise<any> {
+  async favoriteRecipe(id: string, favoriters: string[]): Promise<Recipe> {
     const updatedData = { favoriters };
     const returnResult = await this.recipeModel
-      .findByIdAndUpdate(id, updatedData)
+      .findByIdAndUpdate(id, updatedData, { new: true })
       .exec();
     if (returnResult) {
       return returnResult;
@@ -107,10 +105,10 @@ export class RecipesService {
     return null;
   }
 
-  async rateRecipe(id: string, raters: Map<string, number>): Promise<any> {
+  async rateRecipe(id: string, raters: Map<string, number>): Promise<Recipe> {
     const updatedData = { raters };
     const returnResult = await this.recipeModel
-      .findByIdAndUpdate(id, updatedData)
+      .findByIdAndUpdate(id, updatedData, { new: true })
       .exec();
     if (returnResult) {
       return returnResult;

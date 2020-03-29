@@ -10,22 +10,21 @@ import { User } from '../user/interface/user.interface';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // TODO: possibly consider adding validation pipes to auth routes as well
   @UseGuards(LocalAuthGuard)
   @Post('signIn')
-  async signIn(@Request() req): Promise<any> {
+  async signIn(@Request() req): Promise<{ user: User; token: string }> {
     return this.authService.login(req.user, req.connection.remoteAddress);
   }
 
   @UseGuards(RegisterAuthGuard)
   @Post('signUp')
-  async signUp(@Request() req): Promise<any> {
+  async signUp(@Request() req): Promise<{ user: User; token: string }> {
     return this.authService.login(req.user, req.connection.remoteAddress);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('signOut')
-  async signOut(@Request() req): Promise<any> {
+  async signOut(@Request() req): Promise<{ message: string }> {
     return this.authService.logout(req);
   }
 

@@ -15,16 +15,18 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  // TODO implement typed returns for these methods and the possibly strategies too
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(username: string, password: string): Promise<User> {
     const user = await this.userModel.findOne({ username }, '-__v').exec();
     if (user && (await user.passwordIsValid(password))) {
-      return { _id: user._id, username: user.username, isAdmin: user.isAdmin };
+      return user;
     }
     return null;
   }
 
-  async login(user: User, remoteAddress: string): Promise<any> {
+  async login(
+    user: User,
+    remoteAddress: string
+  ): Promise<{ user: User; token: string }> {
     const identityKey = `${user.username}-${remoteAddress}`;
 
     // eslint-disable-next-line new-cap
@@ -51,8 +53,12 @@ export class AuthService {
     }
 
     const payload = { username: user.username, sub: user._id };
+
+    // can't exclude password from query because it's needed for passwordIsValid method
+    const returnUser = user.toObject();
+    delete returnUser.password;
     return {
-      user,
+      user: returnUser,
       token: this.jwtService.sign(payload),
     };
   }
@@ -66,34 +72,34 @@ export class AuthService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async logout(req: any): Promise<any> {
-    req.session.destroy(err => {
-      if (err) {
-        // TODO throw proper exception?
-        return null;
-      }
+  async logout(req: any): Promise<{ message: string }> {
+    try {
+      req.logout();
       return { message: 'Successfully Logged Out!' };
-    });
+    } catch (err) {
+      // TODO throw proper exception?
+      console.log({ err });
+      return null;
+    }
   }
 
-  async validateAdmin(id: string): Promise<any> {
-    const user = await this.userModel.findById(id).exec();
+  async validateAdmin(id: string): Promise<User> {
+    const user = await this.userModel.findById(id, '-password -__v').exec();
     if (user && user.isAdmin) {
-      return { _id: user._id, username: user.username, isAdmin: user.isAdmin };
+      return user;
     }
     return null;
   }
 
-  async regsiter(userDto: UserDto): Promise<any> {
+  async regsiter(userDto: UserDto): Promise<User> {
     // eslint-disable-next-line new-cap
     const newUser = new this.userModel(userDto);
     try {
       const createdUser = await newUser.save();
       if (createdUser) {
         const { username, _id, isAdmin } = createdUser;
-        return {
-          user: { username, _id, isAdmin },
-        };
+        const returnUser = { username, _id, isAdmin } as User;
+        return returnUser;
       }
     } catch (error) {
       if (error.code === 11000) {

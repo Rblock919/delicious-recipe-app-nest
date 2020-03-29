@@ -13,9 +13,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // TODO create types for payload responses
   // eslint-disable-next-line class-methods-use-this
-  async validate(payload: any) {
+  async validate(payload: any): Promise<{ _id: string; username: string }> {
     return { _id: payload.sub, username: payload.username };
   }
 }

@@ -1,4 +1,12 @@
-import { Controller, Get, UseGuards, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Post,
+  Body,
+  ParseArrayPipe,
+  UsePipes,
+} from '@nestjs/common';
 
 import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
@@ -15,9 +23,11 @@ export class AdminController {
     return this.adminService.getUsers();
   }
 
-  // TODO: add array validation pipe
+  @UsePipes(new ParseArrayPipe({ items: EditUserDto }))
   @Post('updateUsers')
-  async updateUsers(@Body() editedUsers: EditUserDto[]): Promise<any> {
+  async updateUsers(
+    @Body() editedUsers: EditUserDto[]
+  ): Promise<{ message: string }> {
     return this.adminService.updateUsers(editedUsers);
   }
 }
