@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { User } from '../interface/user.interface';
 
 export const UserSchema = new mongoose.Schema({
   username: {
@@ -20,24 +19,7 @@ export const UserSchema = new mongoose.Schema({
   },
 });
 
-/* Can't use arrow functions below due to the usage of the 'this' keyword */
-
-// eslint-disable-next-line func-names
-UserSchema.pre<User>('save', async function(next) {
-  if (!this.isModified('password')) {
-    return next();
-  }
-
-  try {
-    // TODO remove this hardcoded salt rounds
-    this.password = await bcrypt.hash(this.password, 12);
-    return next();
-  } catch (err) {
-    console.log(`err ${err}`);
-    return next(err);
-  }
-});
-
+// Can't use arrow function below due to the usage of the 'this' keyword
 // eslint-disable-next-line func-names
 UserSchema.methods.passwordIsValid = async function(password) {
   try {

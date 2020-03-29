@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -45,7 +45,6 @@ export class AdminService {
     if (updateTrueResult || updateFalseResult) {
       return { message: 'Success' };
     }
-    // TODO: throw a specific error here
-    return null;
+    throw new InternalServerErrorException('Error updating users');
   }
 }

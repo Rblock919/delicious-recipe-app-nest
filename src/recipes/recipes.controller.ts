@@ -50,12 +50,10 @@ export class RecipesController {
     return this.recipesService.getApprovalById(id);
   }
 
-  // TODO: test below route
   @UseGuards(AdminAuthGuard)
   @Post('add')
   async addRecipe(
     @Body('approvalId', ObjectIdValidationPipe) id: string,
-    // TODO: test that using this pipe here works
     @Body('recipe', RecipeValidationPipe) recipe: RecipeDto
   ): Promise<{ id: string }> {
     return this.recipesService.addRecipe(id, recipe);
@@ -102,7 +100,6 @@ export class RecipesController {
     return this.recipesService.favoriteRecipe(id, favoriters);
   }
 
-  // TODO: test below route
   @Post('rate')
   async rateRecipe(
     @Body('_id', ObjectIdValidationPipe) id: string,

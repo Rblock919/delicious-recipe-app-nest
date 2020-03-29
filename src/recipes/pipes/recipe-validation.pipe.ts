@@ -13,15 +13,13 @@ import { RecipeDto } from '../dto/create-recipe.dto';
 export class RecipeValidationPipe implements PipeTransform {
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || this.toValidate(metatype)) {
-      console.log('returning value early');
       return value;
     }
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {
-      throw new BadRequestException('Validation Failed');
+      throw new BadRequestException('Recipe Validation Failed');
     }
-    console.log('recipe is valid');
     return value;
   }
 

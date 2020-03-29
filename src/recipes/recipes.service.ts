@@ -56,7 +56,7 @@ export class RecipesService {
   }
 
   async addRecipe(id: string, recipe: RecipeDto): Promise<{ id: string }> {
-    const deleteResult = await this.newRecipeModel.findByIdAndDelete(id);
+    const deleteResult = await this.newRecipeModel.findByIdAndDelete(id).exec();
     if (!deleteResult) {
       return null;
     }

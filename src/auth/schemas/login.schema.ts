@@ -23,6 +23,8 @@ export const LoginSchema = new mongoose.Schema({
   },
 });
 
+// Can't use arrow function on any of these static functions because it doesn't use the 'this' keyword the same way
+
 // eslint-disable-next-line func-names
 LoginSchema.static('canAuthenticate', async function(
   key: string

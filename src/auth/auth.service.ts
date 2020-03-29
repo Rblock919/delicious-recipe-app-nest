@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
@@ -6,6 +10,7 @@ import { Model } from 'mongoose';
 import { LoginModel } from './interfaces/login.model.interface';
 import { User } from '../user/interface/user.interface';
 import { UserDto } from '../user/dto/user.dto';
+import { LockedException } from './exceptions/locked.exception';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +23,11 @@ export class AuthService {
   async validateUser(username: string, password: string): Promise<User> {
     const user = await this.userModel.findOne({ username }, '-__v').exec();
     if (user && (await user.passwordIsValid(password))) {
-      return user;
+      return {
+        username: user.username,
+        _id: user._id,
+        isAdmin: user.isAdmin,
+      } as User;
     }
     return null;
   }
@@ -29,18 +38,17 @@ export class AuthService {
   ): Promise<{ user: User; token: string }> {
     const identityKey = `${user.username}-${remoteAddress}`;
 
-    // eslint-disable-next-line new-cap
     if (await this.loginModel.loginInProgress(identityKey)) {
-      // TODO: tell client login already is in progress
-      console.log('login already in progress');
-      return null;
+      throw new LockedException(
+        'Login is already in progess. Please try again'
+      );
     }
 
     if (!(await this.loginModel.canAuthenticate(identityKey))) {
       await this.loginModel.endProgress(identityKey);
-      // TODO: tell client account is temp locked out due to high # of attempts
-      console.log('too many attempts');
-      return null;
+      throw new LockedException(
+        'Account is locked due to excessive number of login attempts. Please try again in a few minutes.'
+      );
     }
 
     const successResult = await this.loginModel.successfulLoginAttempt(
@@ -49,16 +57,12 @@ export class AuthService {
 
     if (!successResult) {
       console.log('unsuccessful successfulLoginAttempt mongoose call');
-      return null;
     }
 
     const payload = { username: user.username, sub: user._id };
 
-    // can't exclude password from query because it's needed for passwordIsValid method
-    const returnUser = user.toObject();
-    delete returnUser.password;
     return {
-      user: returnUser,
+      user,
       token: this.jwtService.sign(payload),
     };
   }
@@ -77,9 +81,8 @@ export class AuthService {
       req.logout();
       return { message: 'Successfully Logged Out!' };
     } catch (err) {
-      // TODO throw proper exception?
       console.log({ err });
-      return null;
+      return { message: JSON.stringify(err) };
     }
   }
 
@@ -103,11 +106,10 @@ export class AuthService {
       }
     } catch (error) {
       if (error.code === 11000) {
-        // TODO: return status 409
-        console.log('err: username already exists');
+        throw new ConflictException('Username Already Exists');
       }
       console.log('err creating new user', error);
-      // return null;
+      throw new BadRequestException('Error creating user');
     }
     return null;
   }

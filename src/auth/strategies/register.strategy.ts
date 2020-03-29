@@ -1,5 +1,5 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Strategy } from 'passport-local';
 
 import { AuthService } from '../auth.service';
@@ -14,8 +14,9 @@ export class RegisterStrategy extends PassportStrategy(Strategy, 'register') {
   async validate(username: string, password: string): Promise<User> {
     const user = await this.authService.regsiter({ username, password });
     if (!user) {
-      // TODO: return better exception here b/c of registration (ex. username already exists)
-      throw new UnauthorizedException();
+      throw new BadRequestException(
+        'Could not successfully register. Please try again.'
+      );
     }
     return user;
   }

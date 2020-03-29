@@ -10,14 +10,12 @@ import * as mongoose from 'mongoose';
 export class ObjectIdValidationPipe implements PipeTransform {
   transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || this.toValidate(metatype)) {
-      console.log('returning early');
       return value;
     }
     const { ObjectId } = mongoose.Types;
     if (!ObjectId.isValid(value)) {
-      throw new BadRequestException('value provided is not a valid mongodb id');
+      throw new BadRequestException('Value Provided is not a Valid MongoDB Id');
     }
-    console.log('id is valid');
     return value;
   }
 
