@@ -6,9 +6,9 @@ import { AppHeaderSecurity } from './helmet.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  // app.setGlobalPrefix('api');
   app.enableCors();
-  AppHeaderSecurity(app);
+  // AppHeaderSecurity(app);
   await app.listen(app.get(ConfigService).get('PORT'));
 }
 bootstrap();

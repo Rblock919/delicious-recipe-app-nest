@@ -1,0 +1,58 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Ingredient {
+  name: String!
+  amount: String!
+}
+
+type NutritionValues {
+  calories: Int!
+  fat: Int
+  saturatedFat: Int
+  carbohydrate: Int
+  sugar: Int
+  fiber: Int
+  protein: Int
+  cholesterol: Int
+  sodium: Int
+}
+
+type Query {
+  recipes: [Recipe!]!
+  recipe(id: ID!): Recipe!
+  unapprovedRecipes: [Recipe!]!
+  unapprovedRecipe(id: ID!): Recipe!
+  users: [User!]!
+}
+
+type Raters {
+  keys: [String]!
+  values: [Int]!
+}
+
+type Recipe {
+  _id: ID
+  title: String!
+  producer: String!
+  ingredients: [Ingredient!]!
+  preCook: [String]
+  steps: [Step!]!
+  nutritionValues: NutritionValues!
+  imgDir: String!
+  favoriters: [String]
+  raters: Raters!
+}
+
+type Step {
+  name: String!
+  body: String!
+}
+
+type User {
+  _id: ID
+  username: String!
+  password: String!
+  isAdmin: Boolean!
+}

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { RecipesController } from './recipes.controller';
+import { RecipesResolver } from './recipes.resolver';
 import { RecipesService } from './recipes.service';
 import { RecipeSchema } from './schemas/recipe.schema';
 
@@ -13,6 +14,6 @@ import { RecipeSchema } from './schemas/recipe.schema';
     ]),
   ],
   controllers: [RecipesController],
-  providers: [RecipesService],
+  providers: [RecipesService, RecipesResolver],
 })
 export class RecipesModule {}

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 
@@ -10,6 +11,11 @@ import { AdminModule } from './admin/admin.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'schema.gql',
+      // imports: [ConfigModule],
+      // useClass: ConfigService,
     }),
     RecipesModule,
     AuthModule.forRoot(process.env.TOKEN_SECRET),

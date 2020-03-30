@@ -36,6 +36,7 @@ export const AppHeaderSecurity = app => {
         fontSrc: ["'self'", 'data:', 'https://fonts.gstatic.com'],
         connectSrc: [
           // TODO: update these now that it will only be this server and the client
+          // TODO: add in resources for gql playground
           "'self'",
           'https://delicious-recipe-app.herokuapp.com/api/',
           'http://localhost:3000/',
