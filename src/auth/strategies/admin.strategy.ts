@@ -3,8 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { AuthService } from '../auth.service';
 import { User } from '../../user/interface/user.interface';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {
@@ -19,11 +20,10 @@ export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {
     });
   }
 
-  async validate(payload: any): Promise<User> {
-    const id = payload.sub;
-    const user = await this.authService.validateAdmin(id);
+  async validate(payload: JwtPayload): Promise<User> {
+    const user = await this.authService.validateAdmin(payload.sub);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Incorrect Privileges');
     }
     return user;
   }

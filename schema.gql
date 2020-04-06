@@ -7,7 +7,45 @@ type Ingredient {
   amount: String!
 }
 
+input IngredientInput {
+  name: String!
+  amount: String!
+}
+
+type LoginResponse {
+  user: User!
+  token: String!
+}
+
+type LogoutResponse {
+  message: String!
+}
+
+type Mutation {
+  rate(ratersValues: [Int!]!, ratersKeys: [String!]!, id: ID!): Recipe!
+  favorite(favoriters: [String!]!, id: ID!): Recipe!
+  submitForApproval(recipe: RecipeInput!): String!
+  update(recipe: RecipeInput!): Recipe!
+  add(recipe: RecipeInput!, approvalId: ID!): ID!
+  reject(id: ID!): String!
+  delete(id: ID!): String!
+  login(user: UserInput!): LoginResponse!
+  register(userInfo: UserInput!): LoginResponse!
+}
+
 type NutritionValues {
+  calories: Int!
+  fat: Int
+  saturatedFat: Int
+  carbohydrate: Int
+  sugar: Int
+  fiber: Int
+  protein: Int
+  cholesterol: Int
+  sodium: Int
+}
+
+input NutritionValuesInput {
   calories: Int!
   fat: Int
   saturatedFat: Int
@@ -24,10 +62,17 @@ type Query {
   recipe(id: ID!): Recipe!
   unapprovedRecipes: [Recipe!]!
   unapprovedRecipe(id: ID!): Recipe!
+  getUserData: User!
+  logout: LogoutResponse!
   users: [User!]!
 }
 
 type Raters {
+  keys: [String]!
+  values: [Int]!
+}
+
+input RatersInput {
   keys: [String]!
   values: [Int]!
 }
@@ -45,7 +90,25 @@ type Recipe {
   raters: Raters!
 }
 
+input RecipeInput {
+  _id: String!
+  title: String!
+  producer: String!
+  ingredients: [IngredientInput!]!
+  preCook: [String]
+  steps: [StepInput!]!
+  nutritionValues: NutritionValuesInput!
+  imgDir: String!
+  favoriters: [String]
+  raters: RatersInput
+}
+
 type Step {
+  name: String!
+  body: String!
+}
+
+input StepInput {
   name: String!
   body: String!
 }
@@ -53,6 +116,11 @@ type Step {
 type User {
   _id: ID
   username: String!
-  password: String!
+  password: String
   isAdmin: Boolean!
+}
+
+input UserInput {
+  username: String!
+  password: String!
 }

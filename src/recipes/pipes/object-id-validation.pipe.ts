@@ -9,6 +9,7 @@ import * as mongoose from 'mongoose';
 @Injectable()
 export class ObjectIdValidationPipe implements PipeTransform {
   transform(value: any, { metatype }: ArgumentMetadata) {
+    console.log('in pipe');
     if (!metatype || this.toValidate(metatype)) {
       return value;
     }

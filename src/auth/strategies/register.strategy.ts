@@ -11,6 +11,8 @@ export class RegisterStrategy extends PassportStrategy(Strategy, 'register') {
     super();
   }
 
+  /* TODO: find out if i can still access these from the gql mutations params to still use strategies
+  for registering and loging in */
   async validate(username: string, password: string): Promise<User> {
     const user = await this.authService.regsiter({ username, password });
     if (!user) {

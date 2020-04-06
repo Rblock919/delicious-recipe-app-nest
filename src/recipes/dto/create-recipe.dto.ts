@@ -30,10 +30,11 @@ export class RecipeDto {
 
   @IsOptional()
   @IsArray()
-  preCook: string[];
+  preCook?: string[];
 
   @IsDefined()
   @IsNotEmpty()
+  @IsArray()
   steps: { name: string; body: string }[];
 
   @IsNotEmpty()

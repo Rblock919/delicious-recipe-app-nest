@@ -4,6 +4,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RegisterAuthGuard } from './guards/register-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
+import { UserDto } from '../user/dto/user.dto';
 import { User } from '../user/interface/user.interface';
 
 @Controller('auth')
@@ -12,13 +13,13 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('signIn')
-  async signIn(@Request() req): Promise<{ user: User; token: string }> {
+  async signIn(@Request() req): Promise<{ user: UserDto; token: string }> {
     return this.authService.login(req.user, req.connection.remoteAddress);
   }
 
   @UseGuards(RegisterAuthGuard)
   @Post('signUp')
-  async signUp(@Request() req): Promise<{ user: User; token: string }> {
+  async signUp(@Request() req): Promise<{ user: UserDto; token: string }> {
     return this.authService.login(req.user, req.connection.remoteAddress);
   }
 
@@ -32,6 +33,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('getUserData')
   async getUserdata(@Request() req): Promise<User> {
-    return this.authService.getUserdata(req.user);
+    return this.authService.getUserdata(req.user._id);
   }
 }

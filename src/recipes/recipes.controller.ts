@@ -56,20 +56,23 @@ export class RecipesController {
     @Body('approvalId', ObjectIdValidationPipe) id: string,
     @Body('recipe', RecipeValidationPipe) recipe: RecipeDto
   ): Promise<{ id: string }> {
-    return this.recipesService.addRecipe(id, recipe);
+    // return this.recipesService.addRecipe(id, recipe);
+    return null;
   }
 
   @UsePipes(RecipeValidationPipe)
   @UseGuards(AdminAuthGuard)
   @Patch('update')
   async updateRecipe(@Body('recipe') recipe: RecipeDto): Promise<Recipe> {
-    return this.recipesService.updateRecipe(recipe);
+    // return this.recipesService.updateRecipe(recipe);
+    return null;
   }
 
   @UsePipes(RecipeValidationPipe)
   @Post('submit')
   async submitForApproval(@Body('recipe') recipe: RecipeDto): Promise<Recipe> {
-    return this.recipesService.submitForApproval(recipe);
+    return null;
+    // return this.recipesService.submitForApproval(recipe);
   }
 
   @UseGuards(AdminAuthGuard)
@@ -77,7 +80,8 @@ export class RecipesController {
   async deleteRecipe(
     @Param('id', ObjectIdValidationPipe) id: string
   ): Promise<{ message: string }> {
-    return this.recipesService.deleteRecipe(id);
+    // return this.recipesService.deleteRecipe(id);
+    return null;
   }
 
   @UseGuards(AdminAuthGuard)
@@ -85,7 +89,8 @@ export class RecipesController {
   async rejectRecipe(
     @Param('id', ObjectIdValidationPipe) id: string
   ): Promise<{ message: string }> {
-    return this.recipesService.rejectRecipe(id);
+    // return this.recipesService.rejectRecipe(id);
+    return null;
   }
 
   /* TODO: eventually refactor favorite and rate calls to not just use the body param and
@@ -96,7 +101,6 @@ export class RecipesController {
     @Body('favoriters', new ParseArrayPipe({ items: String }))
     favoriters: string[]
   ): Promise<Recipe> {
-    console.log('made it to controller method');
     return this.recipesService.favoriteRecipe(id, favoriters);
   }
 

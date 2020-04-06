@@ -33,9 +33,9 @@ export class AuthService {
   }
 
   async login(
-    user: User,
+    user: UserDto,
     remoteAddress: string
-  ): Promise<{ user: User; token: string }> {
+  ): Promise<{ user: UserDto; token: string }> {
     const identityKey = `${user.username}-${remoteAddress}`;
 
     if (await this.loginModel.loginInProgress(identityKey)) {
@@ -67,8 +67,8 @@ export class AuthService {
     };
   }
 
-  async getUserdata(user: User): Promise<User> {
-    const foundUser = await this.userModel.findById(user._id, '-password -__v');
+  async getUserdata(id: string): Promise<User> {
+    const foundUser = await this.userModel.findById(id, '-password -__v');
     if (!foundUser) {
       return null;
     }

@@ -14,7 +14,10 @@ export const RecipeSchema = new mongoose.Schema({
       amount: String,
     },
   ],
-  preCook: [String],
+  preCook: {
+    type: [String],
+    default: [],
+  },
   steps: [
     {
       _id: false,

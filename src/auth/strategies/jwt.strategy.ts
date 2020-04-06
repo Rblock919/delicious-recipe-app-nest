@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {
@@ -14,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async validate(payload: any): Promise<{ _id: string; username: string }> {
+  validate(payload: JwtPayload): { _id: string; username: string } {
     return { _id: payload.sub, username: payload.username };
   }
 }
