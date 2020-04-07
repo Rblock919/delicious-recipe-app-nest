@@ -19,6 +19,8 @@ import { RecipesService } from './recipes.service';
 import { RecipeValidationPipe } from './pipes/recipe-validation.pipe';
 import { ObjectIdValidationPipe } from './pipes/object-id-validation.pipe';
 
+// TODO: generate spec files for all resolvers
+
 @UseGuards(GqlJwtGuard)
 @Resolver(of => Recipe)
 export class RecipesResolver {

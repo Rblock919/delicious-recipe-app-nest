@@ -5,11 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
-import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AdminStrategy } from './strategies/admin.strategy';
-import { LocalStrategy } from './strategies/local.strategy';
-import { RegisterStrategy } from './strategies/register.strategy';
 import { UserModule } from '../user/user.module';
 import { LoginSchema } from './schemas/login.schema';
 
@@ -29,15 +26,8 @@ export class AuthModule {
           signOptions: { expiresIn: '7200s' },
         }),
       ],
-      providers: [
-        AuthService,
-        LocalStrategy,
-        RegisterStrategy,
-        JwtStrategy,
-        AdminStrategy,
-        AuthResolver,
-      ],
-      controllers: [AuthController],
+      providers: [AuthService, JwtStrategy, AdminStrategy, AuthResolver],
+      controllers: [],
     };
   }
 }

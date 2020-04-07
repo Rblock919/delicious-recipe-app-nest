@@ -9,8 +9,8 @@ import { Model } from 'mongoose';
 
 import { LoginModel } from './interfaces/login.model.interface';
 import { User } from '../user/interface/user.interface';
-import { UserDto } from '../user/dto/user.dto';
 import { LockedException } from './exceptions/locked.exception';
+import { UserInput } from '../user/models/inputs/user.input';
 
 @Injectable()
 export class AuthService {
@@ -20,9 +20,11 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async validateUser(username: string, password: string): Promise<User> {
-    const user = await this.userModel.findOne({ username }, '-__v').exec();
-    if (user && (await user.passwordIsValid(password))) {
+  async validateUser(userInput: UserInput): Promise<User> {
+    const user = await this.userModel
+      .findOne({ username: userInput.username }, '-__v')
+      .exec();
+    if (user && (await user.passwordIsValid(userInput.password))) {
       return {
         username: user.username,
         _id: user._id,
@@ -33,9 +35,9 @@ export class AuthService {
   }
 
   async login(
-    user: UserDto,
+    user: User,
     remoteAddress: string
-  ): Promise<{ user: UserDto; token: string }> {
+  ): Promise<{ user: User; token: string }> {
     const identityKey = `${user.username}-${remoteAddress}`;
 
     if (await this.loginModel.loginInProgress(identityKey)) {
@@ -94,9 +96,9 @@ export class AuthService {
     return null;
   }
 
-  async regsiter(userDto: UserDto): Promise<User> {
+  async regsiter(userInput: UserInput): Promise<User> {
     // eslint-disable-next-line new-cap
-    const newUser = new this.userModel(userDto);
+    const newUser = new this.userModel(userInput);
     try {
       const createdUser = await newUser.save();
       if (createdUser) {

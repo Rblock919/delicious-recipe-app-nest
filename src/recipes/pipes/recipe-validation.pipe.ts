@@ -7,7 +7,6 @@ import {
 
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
-// import { RecipeDto } from '../dto/create-recipe.dto';
 import { RecipeInput } from '../models/inputs/recipe.input';
 
 @Injectable()
@@ -27,7 +26,6 @@ export class RecipeValidationPipe implements PipeTransform {
   // eslint-disable-next-line class-methods-use-this
   private toValidate(metatype: Function): boolean {
     const types: Function[] = [RecipeInput];
-    // const types: Function[] = [RecipeDto];
     return !types.includes(metatype);
   }
 }

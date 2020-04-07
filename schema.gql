@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input EditUserInput {
+  _id: ID!
+  isAdmin: Boolean!
+}
+
 type Ingredient {
   name: String!
   amount: String!
@@ -31,6 +36,7 @@ type Mutation {
   delete(id: ID!): String!
   login(user: UserInput!): LoginResponse!
   register(userInfo: UserInput!): LoginResponse!
+  updateUsers(editedUsers: [EditUserInput!]!): String!
 }
 
 type NutritionValues {

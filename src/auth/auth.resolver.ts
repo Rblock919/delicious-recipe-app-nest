@@ -7,7 +7,7 @@ import {
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 
 import { AuthService } from './auth.service';
-import { User } from '../user/models/user.model';
+import { User } from '../user/models/types/user.model';
 import { UserInput } from '../user/models/inputs/user.input';
 import { LoginResponse } from './models/login-response.model';
 import { LogoutResponse } from './models/logout-response.model';
@@ -37,10 +37,7 @@ export class AuthResolver {
     @Args('user') inUser: UserInput,
     @RemoteAddress() remoteAddress: string
   ) {
-    const user = await this.authService.validateUser(
-      inUser.username,
-      inUser.password
-    );
+    const user = await this.authService.validateUser(inUser);
     if (!user) {
       throw new UnauthorizedException('Incorrect Username and/or Password');
     }
@@ -52,10 +49,7 @@ export class AuthResolver {
     @Args('userInfo') userInfo: UserInput,
     @RemoteAddress() remoteAddress: string
   ) {
-    const user = await this.authService.regsiter({
-      username: userInfo.username,
-      password: userInfo.password,
-    });
+    const user = await this.authService.regsiter(userInfo);
     if (!user) {
       throw new BadRequestException();
     }

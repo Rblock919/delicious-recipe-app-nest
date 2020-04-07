@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { User } from '../user/interface/user.interface';
-import { EditUserDto } from '../user/dto/edit-user.dto';
+import { EditUserInput } from '../user/models/inputs/edit-user.input';
 
 @Injectable()
 export class AdminService {
@@ -13,7 +13,7 @@ export class AdminService {
     return this.userModel.find({}, '-__v -password').exec();
   }
 
-  async updateUsers(editedUsers: EditUserDto[]): Promise<{ message: string }> {
+  async updateUsers(editedUsers: EditUserInput[]): Promise<string> {
     const setToFalseIds = [];
     const setToTrueIds = [];
 
@@ -43,7 +43,7 @@ export class AdminService {
     }
 
     if (updateTrueResult || updateFalseResult) {
-      return { message: 'Success' };
+      return 'Success';
     }
     throw new InternalServerErrorException('Error updating users');
   }
