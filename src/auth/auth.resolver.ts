@@ -22,13 +22,15 @@ export class AuthResolver {
 
   @UseGuards(GqlJwtGuard)
   @Query(returns => User, { name: 'getUserData' })
-  async getUserData(@CurrentUser() user: { _id: string; username: string }) {
+  async getUserData(
+    @CurrentUser() user: { _id: string; username: string }
+  ): Promise<User> {
     return this.authService.getUserdata(user._id);
   }
 
   @UseGuards(GqlJwtGuard)
   @Query(returns => LogoutResponse, { name: 'logout' })
-  async signOut(@CurrentRequest() req: Request) {
+  async signOut(@CurrentRequest() req: Request): Promise<LogoutResponse> {
     return this.authService.logout(req);
   }
 
@@ -36,7 +38,7 @@ export class AuthResolver {
   async signIn(
     @Args('user') inUser: UserInput,
     @RemoteAddress() remoteAddress: string
-  ) {
+  ): Promise<LoginResponse> {
     const user = await this.authService.validateUser(inUser);
     if (!user) {
       throw new UnauthorizedException('Incorrect Username and/or Password');
@@ -48,7 +50,7 @@ export class AuthResolver {
   async signUp(
     @Args('userInfo') userInfo: UserInput,
     @RemoteAddress() remoteAddress: string
-  ) {
+  ): Promise<LoginResponse> {
     const user = await this.authService.regsiter(userInfo);
     if (!user) {
       throw new BadRequestException();

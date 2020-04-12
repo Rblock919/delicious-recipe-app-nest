@@ -25,7 +25,6 @@ export const LoginSchema = new mongoose.Schema({
 
 // Can't use arrow function on any of these static functions because it doesn't use the 'this' keyword the same way
 
-// eslint-disable-next-line func-names
 LoginSchema.static('canAuthenticate', async function(
   key: string
 ): Promise<boolean> {
@@ -77,7 +76,6 @@ LoginSchema.static('canAuthenticate', async function(
   return false;
 });
 
-// eslint-disable-next-line func-names
 LoginSchema.static('failedLoginAttempt', async function(
   key: string
 ): Promise<any> {
@@ -92,7 +90,6 @@ LoginSchema.static('failedLoginAttempt', async function(
   return this.findOneAndUpdate(query, update, options).exec();
 });
 
-// eslint-disable-next-line func-names
 LoginSchema.static('successfulLoginAttempt', async function(
   key: string
 ): Promise<any> {
@@ -103,7 +100,6 @@ LoginSchema.static('successfulLoginAttempt', async function(
   return null;
 });
 
-// eslint-disable-next-line func-names
 LoginSchema.static('loginInProgress', async function(
   key: string
 ): Promise<any> {
@@ -115,7 +111,6 @@ LoginSchema.static('loginInProgress', async function(
   return login && login.inProgress;
 });
 
-// eslint-disable-next-line func-names
 LoginSchema.static('endProgress', async function(
   key: string
 ): Promise<boolean> {

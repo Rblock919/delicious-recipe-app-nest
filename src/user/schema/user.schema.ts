@@ -20,8 +20,9 @@ export const UserSchema = new mongoose.Schema({
 });
 
 // Can't use arrow function below due to the usage of the 'this' keyword
-// eslint-disable-next-line func-names
-UserSchema.methods.passwordIsValid = async function(password) {
+UserSchema.methods.passwordIsValid = async function(
+  password
+): Promise<boolean> {
   try {
     return await bcrypt.compare(password, this.password);
   } catch (err) {

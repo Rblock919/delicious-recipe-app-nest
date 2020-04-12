@@ -11,7 +11,9 @@ import {
 } from '@nestjs/graphql';
 
 import { Recipe } from './models/types/recipe.model';
+import { Recipe as IRecipe } from './interfaces/recipe.interface';
 import { Raters } from './models/types/raters.model';
+import { RecipeProducer } from './enums/recipe-producer.enum';
 import { RecipeInput } from './models/inputs/recipe.input';
 import { GqlJwtGuard } from '../auth/guards/gql-jwt.guard';
 import { GqlAdminGuard } from '../auth/guards/gql-admin.guard';
@@ -27,20 +29,20 @@ export class RecipesResolver {
   constructor(private recipesSerivce: RecipesService) {}
 
   @Query(returns => [Recipe], { name: 'recipes' })
-  async getRecipes() {
+  async getRecipes(): Promise<IRecipe[]> {
     return this.recipesSerivce.getRecipes();
   }
 
   @Query(returns => Recipe, { name: 'recipe' })
   async getRecipe(
     @Args('id', { type: () => ID }, ObjectIdValidationPipe) id: string
-  ) {
+  ): Promise<IRecipe> {
     return this.recipesSerivce.getRecipe(id);
   }
 
   @UseGuards(GqlAdminGuard)
   @Query(returns => [Recipe], { name: 'unapprovedRecipes' })
-  async getUnapprovedRecipes() {
+  async getUnapprovedRecipes(): Promise<IRecipe[]> {
     return this.recipesSerivce.getApprovalList();
   }
 
@@ -48,7 +50,7 @@ export class RecipesResolver {
   @Query(returns => Recipe, { name: 'unapprovedRecipe' })
   async getUnapprovedRecipe(
     @Args('id', { type: () => ID }, ObjectIdValidationPipe) id: string
-  ) {
+  ): Promise<IRecipe> {
     return this.recipesSerivce.getApprovalById(id);
   }
 
@@ -67,12 +69,12 @@ export class RecipesResolver {
       new ParseArrayPipe({ items: Number })
     )
     values: number[]
-  ) {
-    const returnMap = new Map<string, number>();
+  ): Promise<IRecipe> {
+    const newMap = new Map<string, number>();
     keys.forEach((key, index) => {
-      returnMap.set(key, values[index]);
+      newMap.set(key, values[index]);
     });
-    return this.recipesSerivce.rateRecipe(id, returnMap);
+    return this.recipesSerivce.rateRecipe(id, newMap);
   }
 
   @Mutation(returns => Recipe, { name: 'favorite' })
@@ -84,14 +86,14 @@ export class RecipesResolver {
       new ParseArrayPipe({ items: ObjectIdValidationPipe })
     )
     favoriters: string[]
-  ) {
+  ): Promise<IRecipe> {
     return this.recipesSerivce.favoriteRecipe(id, favoriters);
   }
 
   @Mutation(returns => String, { name: 'submitForApproval' })
   async submitRecipeForApproval(
     @Args('recipe', RecipeValidationPipe) recipe: RecipeInput
-  ) {
+  ): Promise<string> {
     return this.recipesSerivce.submitForApproval(recipe);
   }
 
@@ -99,7 +101,7 @@ export class RecipesResolver {
   @Mutation(returns => Recipe, { name: 'update' })
   async updateRecipe(
     @Args('recipe', RecipeValidationPipe) recipe: RecipeInput
-  ) {
+  ): Promise<IRecipe> {
     return this.recipesSerivce.updateRecipe(recipe);
   }
 
@@ -108,7 +110,7 @@ export class RecipesResolver {
   async addRecipe(
     @Args('approvalId', { type: () => ID }, ObjectIdValidationPipe) id: string,
     @Args('recipe', RecipeValidationPipe) recipeData: RecipeInput
-  ) {
+  ): Promise<string> {
     return this.recipesSerivce.addRecipe(id, recipeData);
   }
 
@@ -116,7 +118,7 @@ export class RecipesResolver {
   @Mutation(returns => String, { name: 'reject' })
   async rejectRecipe(
     @Args('id', { type: () => ID }, ObjectIdValidationPipe) id: string
-  ) {
+  ): Promise<string> {
     return this.recipesSerivce.rejectRecipe(id);
   }
 
@@ -124,15 +126,19 @@ export class RecipesResolver {
   @Mutation(returns => String, { name: 'delete' })
   async deleteRecipe(
     @Args('id', { type: () => ID }, ObjectIdValidationPipe) id: string
-  ) {
+  ): Promise<string> {
     return this.recipesSerivce.deleteRecipe(id);
   }
 
+  // This is to return 'Blue Apron' instead of 'BLUE_APRON' back to the client for example
+  @ResolveField('producer', returns => String)
+  formatProducer(@Parent() recipe: IRecipe): RecipeProducer {
+    return recipe.producer;
+  }
+
   @ResolveField('raters', returns => Raters)
-  // eslint-disable-next-line class-methods-use-this
-  async deconstructRatersMap(@Parent() recipe: Recipe) {
-    // TODO: see if I can use recipe interface instead of model for parent param to avoid this type casting
-    const raters = (recipe.raters as any) as Map<string, number>;
+  deconstructRatersMap(@Parent() recipe: IRecipe): Raters {
+    const { raters } = recipe;
     const ratersIds = [] as string[];
     const ratersValues = [] as number[];
     Array.from(raters.keys()).forEach(key => {

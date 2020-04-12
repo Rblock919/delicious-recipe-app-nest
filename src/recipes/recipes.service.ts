@@ -12,7 +12,7 @@ export class RecipesService {
     @InjectModel('NewRecipe') private newRecipeModel: Model<Recipe>
   ) {}
 
-  // TODO: return something other than null because server is now graphql
+  // TODO: return something other than null for erros because server is now graphql
 
   async getRecipes(): Promise<Recipe[]> {
     const recipes = await this.recipeModel.find().exec();
@@ -62,7 +62,6 @@ export class RecipesService {
     if (!deleteResult) {
       return null;
     }
-    // eslint-disable-next-line new-cap
     const newRecipe = await new this.recipeModel(recipe).save();
     if (!newRecipe) {
       return null;
@@ -71,7 +70,6 @@ export class RecipesService {
   }
 
   async submitForApproval(recipe: RecipeInput): Promise<string> {
-    // eslint-disable-next-line new-cap
     const newRecipe = new this.newRecipeModel(recipe);
     const returnRecipe = await newRecipe.save();
     if (returnRecipe) {

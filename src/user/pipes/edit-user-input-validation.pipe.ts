@@ -7,10 +7,10 @@ import {
 
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
-import { RecipeInput } from '../models/inputs/recipe.input';
+import { EditUserInput } from '../models/inputs/edit-user.input';
 
 @Injectable()
-export class RecipeValidationPipe implements PipeTransform {
+export class EditUserInputValidationPipe implements PipeTransform {
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || this.toValidate(metatype)) {
       return value;
@@ -24,7 +24,7 @@ export class RecipeValidationPipe implements PipeTransform {
   }
 
   private toValidate(metatype: Function): boolean {
-    const types: Function[] = [RecipeInput];
+    const types: Function[] = [EditUserInput];
     return !types.includes(metatype);
   }
 }

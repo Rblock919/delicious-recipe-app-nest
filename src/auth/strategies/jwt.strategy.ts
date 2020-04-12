@@ -15,7 +15,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   validate(payload: JwtPayload): { _id: string; username: string } {
     return { _id: payload.sub, username: payload.username };
   }

@@ -7,10 +7,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 
-import { LoginModel } from './interfaces/login.model.interface';
 import { User } from '../user/interface/user.interface';
-import { LockedException } from './exceptions/locked.exception';
+import { LoginModel } from './interfaces/login.model.interface';
 import { UserInput } from '../user/models/inputs/user.input';
+import { LoginResponse } from './models/login-response.model';
+import { LogoutResponse } from './models/logout-response.model';
+import { LockedException } from './exceptions/locked.exception';
 
 @Injectable()
 export class AuthService {
@@ -34,10 +36,7 @@ export class AuthService {
     return null;
   }
 
-  async login(
-    user: User,
-    remoteAddress: string
-  ): Promise<{ user: User; token: string }> {
+  async login(user: User, remoteAddress: string): Promise<LoginResponse> {
     const identityKey = `${user.username}-${remoteAddress}`;
 
     if (await this.loginModel.loginInProgress(identityKey)) {
@@ -77,8 +76,7 @@ export class AuthService {
     return foundUser;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  async logout(req: any): Promise<{ message: string }> {
+  async logout(req: any): Promise<LogoutResponse> {
     try {
       req.logout();
       return { message: 'Successfully Logged Out!' };
@@ -97,7 +95,6 @@ export class AuthService {
   }
 
   async regsiter(userInput: UserInput): Promise<User> {
-    // eslint-disable-next-line new-cap
     const newUser = new this.userModel(userInput);
     try {
       const createdUser = await newUser.save();

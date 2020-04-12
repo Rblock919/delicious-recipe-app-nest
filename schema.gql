@@ -36,7 +36,7 @@ type Mutation {
   delete(id: ID!): String!
   login(user: UserInput!): LoginResponse!
   register(userInfo: UserInput!): LoginResponse!
-  updateUsers(editedUsers: [EditUserInput!]!): String!
+  updateUsers(userData: [EditUserInput!]!): String!
 }
 
 type NutritionValues {
@@ -97,9 +97,9 @@ type Recipe {
 }
 
 input RecipeInput {
-  _id: String!
+  _id: String
   title: String!
-  producer: String!
+  producer: RecipeProducer!
   ingredients: [IngredientInput!]!
   preCook: [String]
   steps: [StepInput!]!
@@ -107,6 +107,12 @@ input RecipeInput {
   imgDir: String!
   favoriters: [String]
   raters: RatersInput
+}
+
+enum RecipeProducer {
+  HELLO_FRESH
+  HOME_CHEF
+  BLUE_APRON
 }
 
 type Step {

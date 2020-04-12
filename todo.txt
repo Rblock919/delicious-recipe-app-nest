@@ -1,4 +1,3 @@
-- implement graphql
 - create heroku environments
 - create sanitation via pipes
 - look into middleware & interceptors & exception filters

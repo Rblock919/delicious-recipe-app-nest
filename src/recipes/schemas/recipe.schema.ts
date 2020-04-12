@@ -4,6 +4,7 @@ export const RecipeSchema = new mongoose.Schema({
   title: {
     type: String,
   },
+  // TODO: consider adding mongoose validation here for enum
   producer: {
     type: String,
   },

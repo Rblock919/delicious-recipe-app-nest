@@ -13,7 +13,6 @@ import { UserSchema } from './schema/user.schema';
         name: 'User',
         useFactory: (configService: ConfigService) => {
           const schema = UserSchema;
-          // eslint-disable-next-line func-names
           schema.pre<User>('save', async function(next) {
             if (!this.isModified('password')) {
               return next();

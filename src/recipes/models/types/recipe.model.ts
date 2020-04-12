@@ -1,5 +1,6 @@
 import { Field, ObjectType, ID } from '@nestjs/graphql';
 
+import { RecipeProducer } from '../../enums/recipe-producer.enum';
 import { NutritionValues } from './nutrition-values.model';
 import { Ingredient } from './ingredient.model';
 import { Raters } from './raters.model';
@@ -13,8 +14,8 @@ export class Recipe {
   @Field()
   title: string;
 
-  @Field()
-  producer: string;
+  @Field(type => RecipeProducer)
+  producer: RecipeProducer;
 
   @Field(type => [Ingredient])
   ingredients: Ingredient[];

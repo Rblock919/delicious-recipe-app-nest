@@ -19,7 +19,6 @@ export class ObjectIdValidationPipe implements PipeTransform {
     return value;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private toValidate(metatype: Function): boolean {
     const types: Function[] = [String];
     return !types.includes(metatype);

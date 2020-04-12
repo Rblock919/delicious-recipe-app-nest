@@ -14,7 +14,7 @@ import { AdminModule } from './admin/admin.module';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
-      context: ({ req }) => ({ req }),
+      context: ({ req, res }) => ({ req, res }),
       // imports: [ConfigModule],
       // useClass: ConfigService,
     }),

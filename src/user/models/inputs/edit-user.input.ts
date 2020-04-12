@@ -11,6 +11,6 @@ export class EditUserInput {
 
   @IsDefined()
   @IsBoolean()
-  @Field()
+  @Field(type => Boolean)
   isAdmin: boolean;
 }
