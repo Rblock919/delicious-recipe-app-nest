@@ -12,7 +12,8 @@ import users from './data/userData';
 // TODO: implement seeding for db-users
 // mongo refers to mongo docker container name
 MongoClient.connect(
-  'mongodb://mongo:27017',
+  // 'mongodb://mongo:27017',
+  'mongodb://appUser:recipe@localhost:27017/recipeApp?authSource=recipeApp',
   { useNewUrlParser: true, useUnifiedTopology: true },
   async (err, client) => {
     if (err) {

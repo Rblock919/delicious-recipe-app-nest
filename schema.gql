@@ -41,8 +41,8 @@ type Mutation {
 
 type NutritionValues {
   calories: Int!
-  fat: Int
-  saturatedFat: Int
+  fat: Float
+  saturatedFat: Float
   carbohydrate: Int
   sugar: Int
   fiber: Int

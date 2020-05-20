@@ -1,14 +1,14 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
 
 @ObjectType()
 export class NutritionValues {
   @Field(type => Int)
   calories: number;
 
-  @Field(type => Int, { nullable: true })
+  @Field(type => Float, { nullable: true })
   fat?: number;
 
-  @Field(type => Int, { nullable: true })
+  @Field(type => Float, { nullable: true })
   saturatedFat?: number;
 
   @Field(type => Int, { nullable: true })

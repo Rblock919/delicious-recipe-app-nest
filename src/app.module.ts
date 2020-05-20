@@ -15,6 +15,9 @@ import { AdminModule } from './admin/admin.module';
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
       context: ({ req, res }) => ({ req, res }),
+      path: '/',
+      // cors is configured in main.ts
+      cors: false,
       // imports: [ConfigModule],
       // useClass: ConfigService,
     }),
